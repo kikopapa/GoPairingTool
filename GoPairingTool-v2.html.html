@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>圍棋班兩兩對戰抽籤</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f7f7f7;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    textarea {
+      width: 350px;
+      height: 200px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .results {
+      margin-top: 20px;
+      font-size: 22px;
+      line-height: 1.8;
+    }
+    .group {
+      background: #fff;
+      margin: 10px auto;
+      padding: 15px;
+      width: 70%;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .history {
+      margin-top: 30px;
+      text-align: left;
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 18px;
+      background: #eef;
+      padding: 15px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>圍棋班 - 對戰抽籤</h1>
+  <p>請輸入學生名單（ 每行一個名字+棋力，例如「小明 27級」 ）</p>
+  <textarea id="nameList" placeholder="霽廷 21級&#10;沐華 25級&#10;証淞 28級&#10;翔樹 26級&#10;玟燕 30級&#10;康衡 29級"></textarea><br>
+  <button onclick="drawPairsRandom()">隨機配對</button>
+  <button onclick="drawPairsByRank()">棋力接近配對</button>
+  <button onclick="clearResults()">清除結果</button>
+  <button onclick="showHistory()">查看歷史對戰紀錄</button>
+
+  <div id="results" class="results"></div>
+  <div id="history" class="history" style="display:none;"></div>
+
+  <script>
+    let historyPairs = new Set(); // 紀錄已對戰過的組合
+    let historyLog = []; // 紀錄每次對戰的完整結果
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function parseNames() {
+      const input = document.getElementById('nameList').value.trim();
+      if (!input) {
+        alert('請先輸入學生名單！');
+        return [];
+      }
+      let players = input.split(/\n|,/).map(n => n.trim()).filter(n => n).map(line => {
+        const match = line.match(/^(.*)\s+(\d+)級$/);
+        if (match) {
+          return { name: match[1], rank: parseInt(match[2], 10) };
+        } else {
+          return { name: line, rank: 30 }; // 沒寫棋力，預設30級
+        }
+      });
+      return players;
+    }
+
+    function generatePairs(players) {
+      let pairs = [];
+      for (let i = 0; i < players.length; i += 2) {
+        if (i + 1 < players.length) {
+          let p1 = players[i];
+          let p2 = players[i+1];
+          let key = [p1.name, p2.name].sort().join('-');
+
+          // 如果已對戰過，換一組
+          if (historyPairs.has(key) && players.length > 2) {
+            if (i + 2 < players.length) {
+              let temp = players[i+1];
+              players[i+1] = players[i+2];
+              players[i+2] = temp;
+              p2 = players[i+1];
+              key = [p1.name, p2.name].sort().join('-');
+            }
+          }
+          pairs.push([p1, p2]);
+          historyPairs.add(key);
+        } else {
+          pairs.push([players[i], null]);
+        }
+      }
+      return pairs;
+    }
+
+    function drawPairsRandom() {
+      let players = parseNames();
+      if (players.length === 0) return;
+      players = shuffle(players);
+      const pairs = generatePairs(players);
+      displayPairs(pairs);
+      historyLog.push(pairs);
+    }
+
+    function drawPairsByRank() {
+      let players = parseNames();
+      if (players.length === 0) return;
+      players.sort((a, b) => a.rank - b.rank);
+      const pairs = generatePairs(players);
+      displayPairs(pairs);
+      historyLog.push(pairs);
+    }
+
+    function displayPairs(pairs) {
+      let html = '';
+      pairs.forEach((pair, index) => {
+        if (pair[1]) {
+          html += `<div class="group">第${index+1}組：${pair[0].name} (${pair[0].rank}級) vs ${pair[1].name} (${pair[1].rank}級)</div>`;
+        } else {
+          html += `<div class="group">第${index+1}組：${pair[0].name} (${pair[0].rank}級) (輪空)</div>`;
+        }
+      });
+      document.getElementById('results').innerHTML = html;
+    }
+
+    function clearResults() {
+      document.getElementById('results').innerHTML = '';
+    }
+
+    function showHistory() {
+      let historyDiv = document.getElementById('history');
+      if (historyLog.length === 0) {
+        historyDiv.style.display = 'block';
+        historyDiv.innerHTML = '<b>目前沒有歷史紀錄</b>';
+        return;
+      }
+
+      let html = '<h3>歷史對戰紀錄</h3>';
+      historyLog.forEach((pairs, round) => {
+        html += `<p><b>第${round+1}次抽籤：</b></p>`;
+        pairs.forEach((pair, index) => {
+          if (pair[1]) {
+            html += `第${index+1}組：${pair[0].name} (${pair[0].rank}級) vs ${pair[1].name} (${pair[1].rank}級)<br>`;
+          } else {
+            html += `第${index+1}組：${pair[0].name} (${pair[0].rank}級) (輪空)<br>`;
+          }
+        });
+      });
+
+      historyDiv.style.display = 'block';
+      historyDiv.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
