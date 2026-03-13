@@ -5,36 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>圍棋班對戰抽籤系統 - 小樹爸爸 KIKOPAPA</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <style>
+<style>
     :root{ --primary: #4a6741; --bg: #b9c8b1; --card: rgba(255,255,255,0.95); --accent: #e67e22; --download: #2980b9; }
     body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
-    .container { max-width: 900px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; }
+    .container { max-width: 900px; margin: 0 auto; padding: 15px; flex: 1; width: 100%; }
     
-    header { text-align: center; margin-bottom: 30px; }
-    h1 { color: #2c3e50; margin-bottom: 5px; }
-    .brand-sub { color: #4a6741; font-weight: bold; margin-bottom: 20px; }
+    header { text-align: center; margin-bottom: 25px; }
+    h1 { color: #2c3e50; font-size: clamp(24px, 5vw, 36px); margin-bottom: 5px; }
+    .brand-sub { color: #4a6741; font-weight: bold; font-size: clamp(14px, 2.5vw, 18px); margin-bottom: 15px; }
 
-    .panel { background: var(--card); padding: 25px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
-    
-    /* 班級選擇 */
+    .panel { background: var(--card); padding: clamp(15px, 4vw, 25px); border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 25px; }
+    h3 { font-size: clamp(18px, 3vw, 24px); margin-top: 0; color: #333; }
+
+    /* 1. 班級選擇按鈕優化 */
     .filter-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 15px; }
-    .class-btn { padding: 8px 16px; border-radius: 20px; border: 2px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer; font-weight: bold; transition: 0.3s; }
+    .class-btn { 
+      padding: 10px 20px; 
+      border-radius: 25px; 
+      border: 2px solid var(--primary); 
+      background: transparent; 
+      color: var(--primary); 
+      cursor: pointer; 
+      font-weight: bold; 
+      font-size: clamp(15px, 2.2vw, 19px); /* 響應式字體 */
+      transition: 0.3s; 
+    }
     .class-btn.active { background: var(--primary); color: white; }
     
-    /* 學生點名 */
+    /* 2. 學生點名按鈕優ize */
     .student-pool { display: flex; flex-wrap: wrap; gap: 10px; min-height: 50px; }
-    .student-btn { padding: 10px 15px; border-radius: 10px; border: 1px solid #ccc; background: #fff; cursor: pointer; transition: 0.2s; -webkit-tap-highlight-color: transparent; }
-    .student-btn.selected { background: #ffd700; border-color: #f39c12; font-weight: bold; transform: scale(1.05); }
+    .student-btn { 
+      padding: clamp(10px, 2vw, 15px) clamp(15px, 3vw, 22px); 
+      border-radius: 12px; 
+      border: 1px solid #ccc; 
+      background: #fff; 
+      cursor: pointer; 
+      font-size: clamp(15px, 2.2vw, 20px); /* 解決平板字體太小關鍵 */
+      transition: 0.2s; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+    .student-btn.selected { background: #ffd700; border-color: #f39c12; font-weight: bold; transform: scale(1.03); }
     
-    /* 臨時插班區塊 */
-    .temp-add-zone { margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.05); border-radius: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .temp-input { padding: 10px; border-radius: 8px; border: 1px solid #ccc; flex: 1; min-width: 150px; }
-    .btn-add { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    /* 3. 臨時插班區塊優化 */
+    .temp-add-zone { 
+      margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.05); border-radius: 10px; 
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center; 
+      font-size: clamp(15px, 2.2vw, 19px);
+    }
+    .temp-input { 
+      padding: 12px; border-radius: 8px; border: 1px solid #ccc; flex: 1; min-width: 150px; 
+      font-size: clamp(15px, 2.2vw, 19px); 
+    }
+    .btn-add { 
+      background: var(--accent); color: white; border: none; 
+      padding: 12px 25px; border-radius: 8px; cursor: pointer; 
+      font-weight: bold; font-size: clamp(15px, 2.2vw, 19px); 
+    }
 
-    .controls { display: flex; gap: 10px; margin-top: 25px; }
-    .btn-main { background: var(--primary); color: white; border: none; padding: 15px 20px; border-radius: 10px; cursor: pointer; flex: 1; font-size: 16px; font-weight: bold; }
+    .controls { display: flex; gap: 15px; margin-top: 25px; }
+    .btn-main { 
+      background: var(--primary); color: white; border: none; 
+      padding: 18px 20px; border-radius: 12px; cursor: pointer; flex: 1; 
+      font-size: clamp(16px, 2.5vw, 22px); font-weight: bold; 
+    }
     
-    /* 🎨 棋盤匯出區 (Flexbox 佈局確保圖片不崩壞) */
+    /* 棋盤匯出區 */
     #exportArea { 
       background-color: #e3a857;
       background-image: linear-gradient(90deg, rgba(0,0,0,0.15) 1px, transparent 1px), linear-gradient(rgba(0,0,0,0.15) 1px, transparent 1px);
@@ -44,31 +79,23 @@
     .result-box-inner { background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 10px; }
     .result-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px; }
     
-    /* Flexbox 置中對齊邏輯 */
     .result-item { 
-      display: flex; 
-      align-items: center; 
-      justify-content: space-between; 
-      background: white; 
-      padding: 12px 10px; 
-      margin: 10px 0; 
-      border-radius: 8px; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+      display: flex; align-items: center; justify-content: space-between; 
+      background: white; padding: 12px 10px; margin: 10px 0; border-radius: 8px; 
     }
-    .col-group { width: 18%; text-align: left; color: #7f8c8d; font-size: 14px; font-weight: bold; white-space: nowrap; }
-    .col-player-left { width: 35%; text-align: right; font-weight: bold; padding-right: 8px; font-size: 18px; }
+    .col-group { width: 22%; text-align: left; color: #7f8c8d; font-size: 16px; font-weight: bold; white-space: nowrap; }
+    .col-player-left { width: 33%; text-align: right; font-weight: bold; padding-right: 8px; font-size: clamp(16px, 2.5vw, 20px); }
     .col-vs { width: 12%; color: var(--accent); font-size: 14px; font-weight: bold; text-align: center; }
-    .col-player-right { width: 35%; text-align: left; font-weight: bold; padding-left: 8px; font-size: 18px; }
+    .col-player-right { width: 33%; text-align: left; font-weight: bold; padding-left: 8px; font-size: clamp(16px, 2.5vw, 20px); }
     
     .rank-tag { font-weight: normal; font-size: 13px; color: #666; }
     .img-watermark { text-align: right; font-size: 12px; color: #8a6d3b; margin-top: 15px; font-family: serif; font-style: italic; }
 
-    .btn-download { background: var(--download); color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: bold; display: none; font-size: 16px; }
+    .btn-download { background: var(--download); color: white; border: none; padding: 18px; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: bold; display: none; font-size: 18px; }
 
     /* 品牌頁尾 */
-    footer { background: #2c3e50; color: #ecf0f1; padding: 30px 20px; text-align: center; line-height: 1.8; margin-top: auto; }
+    footer { background: #2c3e50; color: #ecf0f1; padding: 40px 20px; text-align: center; line-height: 1.8; margin-top: auto; font-size: 16px; }
     footer a { color: #3498db; text-decoration: none; border-bottom: 1px solid #3498db; }
-    .footer-copyright { margin-top: 15px; font-size: 13px; color: #bdc3c7; }
   </style>
 </head>
 <body>
@@ -256,4 +283,5 @@
 </script>
 
 </body>
+
 </html>
