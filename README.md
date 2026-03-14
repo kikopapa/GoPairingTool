@@ -7,11 +7,13 @@
 [V1](https://storage.googleapis.com/gopairing/GoPairingTool-v4.html)
 1. 行動裝置友善版
 2. 歷史紀錄
+
 ![image](screenshot/homepage.png)
 
 [V2](https://storage.googleapis.com/gopairing/GoPairingTool-v9.html)
 1. 免打字：班級名單預載入進去，只要點選即可.
 2. 如遇到臨時插班學生，旁邊有個框框直接輸入，也可以加入配對。
 3. 更專業：一鍵匯出「對戰表」圖檔，發給家長群組超方便！
+
 ![image](screenshot/screenshot_1.png)
 ![image](screenshot/screenshot_2.png)
