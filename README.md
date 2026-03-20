@@ -5,8 +5,7 @@
 如果有需要的老師，我很樂意分享，讓大家省心又省事 
 
 [V3](https://storage.googleapis.com/gopairing/GoPairingTool-v13.html)
-1.班級/學生資料上雲端
-
+- 班級/學生資料上雲端
 [V2](https://storage.googleapis.com/gopairing/GoPairingTool-v9.html)
 1. 免打字：班級名單預載入進去，只要點選即可.
 2. 如遇到臨時插班學生，旁邊有個框框直接輸入，也可以加入配對。
