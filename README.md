@@ -4,11 +4,8 @@
 於是 最近我做了一個小小的網頁程式，可以自動配對對弈。 <br/>
 如果有需要的老師，我很樂意分享，讓大家省心又省事 
 
-[V1](https://storage.googleapis.com/gopairing/GoPairingTool-v4.html)
-1. 行動裝置友善版
-2. 歷史紀錄
-
-![image](screenshot/homepage.png)
+[V3](https://storage.googleapis.com/gopairing/GoPairingTool-v13.html)
+1.班級/學生資料上雲端
 
 [V2](https://storage.googleapis.com/gopairing/GoPairingTool-v9.html)
 1. 免打字：班級名單預載入進去，只要點選即可.
@@ -17,3 +14,10 @@
 
 ![image](screenshot/screenshot_1.png)
 ![image](screenshot/screenshot_2.png)
+
+[V1](https://storage.googleapis.com/gopairing/GoPairingTool-v4.html)
+1. 行動裝置友善版
+2. 歷史紀錄
+
+![image](screenshot/homepage.png)
+
